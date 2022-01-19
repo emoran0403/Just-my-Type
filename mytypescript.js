@@ -4,6 +4,7 @@ const initialGameState = {
   incorrectWords: 0,
   currentSentence: null,
   currentCharacter: null,
+  currentInput: null,
 };
 
 const beginning = ["Ready"];
@@ -28,31 +29,55 @@ const sentences = [
 ];
 
 $(document).ready(function () {
-  // console.log("awyea weve got jq linked!");
-  // console.log(sentences);
+  let currentGameState = { ...initialGameState };
 
-  $(document).keypress(function (event) {
-    // console.log("this should show when i press a key on my document");
+  /**
+  this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
+  */
 
-    let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState
+  currentGameState.currentSentence = beginning[0]; // sets the current Sentence to Ready
+  currentGameState.currentCharacter = beginning[0][0]; // sets the current character to R
+  currentGameState.currentInput = "";
 
-    if (currentGameState.playerIsReady) {
-      // when the player is ready, this will run.  this happens after they type ready
-      // console.log("player is ready!");
-    } else {
-      // when the player is not ready, this will run.
-      // console.log("player is not ready!");
+  if (currentGameState.playerIsReady === false) {
+    // when the player is not ready, this will run.
+    console.log("player is not ready");
+    console.log(currentGameState);
 
-      /**
-      .which + keypress = ASCII code for the character that was entered, nice.  Key press respects uppercase vs lowercase characters
-      */
-
+    $(document).keypress(function (event) {
       let keyCode = event.which; // stores the ascii code for the key which was pressed
-      //let keyLetter =
-      console.log($(`#${keyCode}`).text()); // takes the ascii code, finds that id from html, then returns the text stored there, thus giving the character that was pressed
-      //$(`#${keyCode}`).css({ backgroundColor: "Blue" });
-    }
-  });
+      console.log(keyCode);
+      let letter = document.getElementById(keyCode).innerHTML; // gets the letter that was pressed
+      console.log(letter);
+      let idnum = $("#114").text(); // finds id 114 and returns the character there, thus going from ascii to character
+      // i need to do the above dynamically with jquery.  this is where im leaving off for today :)
+      console.log(idnum);
+      let newnum = $("keycode");
+      console.log(newnum);
+
+      /*
+      console.log(`the key code is ${keyCode}`);
+      let thisletter = $("#${keyCode}").text();
+      console.log(`the letter is ${thisletter}`);
+
+      console.log($(`the text is #${keyCode}`).text()); // takes the ascii code, finds that id from html, then returns the text stored there, thus giving the character that was pressed
+      console.log(currentGameState);
+*/
+      /*if (currChar === currentGameState.currentCharacter) {
+        console.log("the right key was pressed");
+        console.log(currentGameState);
+      }*/
+    });
+  }
+
+  if (currentGameState.playerIsReady === true) {
+    // when the player is ready, this will run.
+
+    console.log("player is ready");
+    $(document).keypress(function (event) {
+      //remove me
+    });
+  }
 });
 
 /**
@@ -72,7 +97,13 @@ $(document).ready(function () {
  *
  *
  *
- *
+ *how to check if the correct key was pressed?
+ get the ascii code from the event
+ translate that into the character
+ use if to compare that to the current character
+ if true then increment the current letter
+ if the letter is the last letter of the word, increment the word
+ if the word is the last word of the sentence, go to the next sentence
  *
  *
  *
