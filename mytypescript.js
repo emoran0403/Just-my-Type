@@ -45,6 +45,8 @@ $(document).ready(function () {
 
   console.log(`you need to press ${currentGameState.currentCharacter}`);
 
+  document.getElementById("sentence").innerHTML = beginning[s]; // sets the current sentence text
+
   $(document).keypress(function (event) {
     // defines the keypress function upon which the game logic runs
     let keyCode = event.which; // stores the ascii code for the key which was pressed
@@ -59,8 +61,6 @@ $(document).ready(function () {
         c++;
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
 
-        //$("#sentence").text(beginning[s]);//*!this is supposed to find the id=sentence div and set the text to the first element in the beginning array
-
         if (c === beginning[0].length) {
           c = 0;
           console.log("The player should be ready!");
@@ -68,6 +68,7 @@ $(document).ready(function () {
           currentGameState.currentSentence = sentences[s]; // sets the current sentence
           currentGameState.currentCharacter = sentences[s][c]; // sets the current character
           console.log(currentGameState);
+          document.getElementById("sentence").innerHTML = sentences[s]; // sets the current sentence text
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       }
@@ -80,12 +81,11 @@ $(document).ready(function () {
         c++;
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
 
-        //$("#sentence").text(beginning[s]);//*!this is supposed to find the id=sentence div and set the text to the first element in the sentence array
-
         if (c === sentences[s].length) {
           c = 0;
           s++;
           console.log("The player is moving on!");
+          document.getElementById("sentence").innerHTML = sentences[s]; // sets the current sentence text
           currentGameState.currentSentence = sentences[s]; // sets the current sentence
           currentGameState.currentCharacter = sentences[s][c]; // sets the current character
           console.log(currentGameState);
@@ -98,11 +98,11 @@ $(document).ready(function () {
 
 /**
  *
- * todo - make keypress fucntnio detect if shift was pressed so i can hide / display the proper keyboard
+ * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard
  * todo - highlight the current character on the keyboard, then unhighlight it
  * todo - add a timer that starts when player has finished typing 'ready'
  * todo - make the yellow block move upon each correct key press
- * todo - make the current sentence show up //*! in place, but not working
+ * todo - make the current sentence show up //*?done
  * todo - split each sentence element into their own array to set up current words
  * todo - if an incorrect character is entered, to reset the current word progress
  * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
