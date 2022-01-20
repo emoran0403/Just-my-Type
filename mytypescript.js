@@ -14,19 +14,19 @@ const sentences = [
   // makes an array with the sentences for the player to type
   "Big one",
   "Small two",
-  /**
-   "this one is easy",
-   "Capitals are a little more difficult",
-   "How About Some Title Case",
-   'Maybe, with some punctuation, "this!" will be a little easier; or not?',
-   "howaboutasentencetypedasifyourspacebarwasbroken",
-   "maybe-you-just-want-to-dash-your-way-through-the-game",
-   "their, they're, there, to, two, too",
-   "1, 1, 2, 3, 5, 8, and 13 start the Fibonacci Sequence",
-   "(-b+sqrt(b^2-4ac))/2a and (-b-sqrt(b^2-4ac)) give the roots of the general quadratic: ax^2+bx+c=0",
-   "last one!",
-   "jk"
-   */
+  /*
+  "this one is easy",
+  "Capitals are a little more difficult",
+  "How About Some Title Case",
+  'Maybe, with some punctuation, "this!" will be a little easier; or not?',
+  "howaboutasentencetypedasifyourspacebarwasbroken",
+  "maybe-you-just-want-to-dash-your-way-through-the-game",
+  "their, they're, there, to, two, too",
+  "1, 1, 2, 3, 5, 8, and 13 start the Fibonacci Sequence",
+  "(-b+sqrt(b^2-4ac))/2a and (-b-sqrt(b^2-4ac)) give the roots of the general quadratic: ax^2+bx+c=0",
+  "last one!",
+  "jk",
+  */
 ];
 
 // let test = sentences[0].split(" ");
@@ -45,7 +45,7 @@ $(document).ready(function () {
 
   console.log(`you need to press ${currentGameState.currentCharacter}`);
 
-  document.getElementById("sentence").innerHTML = beginning[s]; // sets the current sentence text
+  document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
 
   $(document).keypress(function (event) {
     // defines the keypress function upon which the game logic runs
@@ -68,7 +68,7 @@ $(document).ready(function () {
           currentGameState.currentSentence = sentences[s]; // sets the current sentence
           currentGameState.currentCharacter = sentences[s][c]; // sets the current character
           console.log(currentGameState);
-          document.getElementById("sentence").innerHTML = sentences[s]; // sets the current sentence text
+          document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       }
@@ -85,7 +85,7 @@ $(document).ready(function () {
           c = 0;
           s++;
           console.log("The player is moving on!");
-          document.getElementById("sentence").innerHTML = sentences[s]; // sets the current sentence text
+          document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
           currentGameState.currentSentence = sentences[s]; // sets the current sentence
           currentGameState.currentCharacter = sentences[s][c]; // sets the current character
           console.log(currentGameState);
