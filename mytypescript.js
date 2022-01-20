@@ -33,81 +33,61 @@ const sentences = [
 // console.log(test);
 
 $(document).ready(function () {
-  let currentGameState = { ...initialGameState };
+  let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
 
-  /**
-   this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
-   */
-
+  // setting the currentGateState variables
   let s = 0; // serves as the index of the current sentence to traverse through the sentences array
   //let w = 0; // serves as the index of the current word to traverse through the sentences array
   let c = 0; // serves as the index of the current character
   currentGameState.currentSentence = beginning[s]; // sets the current sentence
   currentGameState.currentCharacter = beginning[s][c]; // sets the current character
-  currentGameState.currentInput = "";
+  currentGameState.currentInput = ""; // sets the current input as an empty string
 
-  if (currentGameState.playerIsReady === false) {
-    // when the player is not ready, this will run.
-    console.log("player is not ready");
-    console.log(currentGameState);
-    console.log(`you need to press ${currentGameState.currentCharacter}`);
+  console.log(`you need to press ${currentGameState.currentCharacter}`);
 
-    $(document).keypress(function (event) {
-      let keyCode = event.which; // stores the ascii code for the key which was pressed
-      //console.log(keyCode); // for checking the ascii code of the key that was pressed
-      currentGameState.currentInput = $(`#${keyCode}`).text(); // gets the letter that was pressed via jQuery
-      //document.getElementById(keyCode).innerHTML; // gets the letter that was pressed via DOM
-      console.log(`you pressed ${currentGameState.currentInput}`);
+  $(document).keypress(function (event) {
+    let keyCode = event.which; // stores the ascii code for the key which was pressed
+    currentGameState.currentInput = $(`#${keyCode}`).text(); // gets the letter that was pressed via jQuery // <document.getElementById(keyCode).innerHTML;> // gets the letter that was pressed via DOM
+    console.log(`you pressed ${currentGameState.currentInput}`); // logs the key that was pressed as a letter not ascii
 
-      if (
-        currentGameState.currentCharacter === currentGameState.currentInput && // this checks if the current input matches the needed character, while in the un-ready state
-        currentGameState.playerIsReady === false
-      ) {
-        c++;
-        currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
-        /*
-        if (c === beginning[0].length) {
-          c = 0;
-          console.log("The player should be ready!");
-          currentGameState.playerIsReady = true;
-          console.log(currentGameState);
-          currentGameState.currentSentence = sentences[s]; // sets the current sentence
-          currentGameState.currentCharacter = sentences[s][c]; // sets the current character
-        }*/
-        console.log(`you need to press ${currentGameState.currentCharacter}`);
+    //******************************************************When player is ready**************************************************************************** */
+
+    if (currentGameState.playerIsReady === false) {
+      //
+      c++;
+      currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+
+      if (c === beginning[0].length) {
+        c = 0;
+        console.log("The player should be ready!");
+        currentGameState.playerIsReady = true;
+        currentGameState.currentSentence = sentences[s]; // sets the current sentence
+        currentGameState.currentCharacter = sentences[s][c]; // sets the current character
+        console.log(currentGameState);
       }
-    });
-  }
-  //******************************************************When player is ready**************************************************************************** */
-  if (currentGameState.playerIsReady === true) {
-    $(document).keypress(function (event) {
-      let keyCode = event.which; // stores the ascii code for the key which was pressed
+      console.log(`you need to press ${currentGameState.currentCharacter}`);
+    }
+
+    //******************************************************When player is ready**************************************************************************** */
+    if (currentGameState.playerIsReady === true) {
       // console.log(keyCode);
       currentGameState.currentInput = $(`#${keyCode}`).text();
-      console.log(`you pressed ${currentGameState.currentInput}`);
 
-      if (
-        currentGameState.currentCharacter === currentGameState.currentInput && // this checks if the current input matches the needed character, while in the ready state
-        currentGameState.playerIsReady === true
-      ) {
+      if (currentGameState.currentCharacter === currentGameState.currentInput) {
         c++;
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       }
-    });
-    /*
+
+      /*
     if (
       currentGameState.currentWord[currentGameState.currentWord.length - 1] &&
       currentGameState.currentInput === currentGameState.currentCharacter
     ) {
     }
 */
-    //console.log("you are definitely ready now!");
-    c++;
-    console.log(`you need to press ${currentGameState.currentCharacter}`);
-    currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
-    console.log(`you need to press ${currentGameState.currentCharacter}`);
-  }
+    }
+  });
 });
 
 /*
@@ -152,6 +132,20 @@ $(document).ready(function () {
  *upper display starts at style="display: none;"  when shift is held, hide lower and show upper, when shift is released, hide upper and show lower
  *
  *
+ *
+ *
+ */
+
+/**
+ *
+ * document ready function
+ * {
+ * keypress function
+ * {
+ * if false {}
+ * if true {}
+ * }
+ * }
  *
  *
  */
