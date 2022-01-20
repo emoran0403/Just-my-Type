@@ -50,7 +50,7 @@ $(document).ready(function () {
     currentGameState.currentInput = $(`#${keyCode}`).text(); // gets the letter that was pressed via jQuery // <document.getElementById(keyCode).innerHTML;> // gets the letter that was pressed via DOM
     console.log(`you pressed ${currentGameState.currentInput}`); // logs the key that was pressed as a letter not ascii
 
-    //******************************************************When player is ready**************************************************************************** */
+    //******************************************************When player is not ready*****************************************************************************/
 
     if (currentGameState.playerIsReady === false) {
       //
@@ -68,7 +68,7 @@ $(document).ready(function () {
       console.log(`you need to press ${currentGameState.currentCharacter}`);
     }
 
-    //******************************************************When player is ready**************************************************************************** */
+    //******************************************************When player is ready*****************************************************************************/
     if (currentGameState.playerIsReady === true) {
       // console.log(keyCode);
       currentGameState.currentInput = $(`#${keyCode}`).text();
