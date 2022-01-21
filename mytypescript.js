@@ -160,10 +160,14 @@ $(document).ready(function () {
  * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard //*? done
  * todo - highlight the current character on the keyboard, then unhighlight it //*? done
  * todo - make the current sentence show up //*?done
- * todo - add a timer that starts when player has finished typing 'ready'
+ * todo - add a timer that starts when player has finished typing 'ready' 
+ *  - use a date function to set a start time, call it again to set an end time, and diff = time elapsed
  * todo - make the yellow block move upon each correct key press
+ *  - when c increments, have it also move the yellow block
  * todo - split each sentence element into their own array to set up current words
+ *  - video @1:33 starts the array methods for splitting etc
  * todo - if an incorrect character is entered, to reset the current word progress
+ *  - if (currentGameState.currentCharacter !== currentGameState.currentInput) then reset w to 0 and somehow move c as well
  * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
  * todo - 
  * todo - 
