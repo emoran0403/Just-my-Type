@@ -16,6 +16,7 @@ const sentences = [
   "Small two",
   /*
   "this one is easy",
+  "His name is Ervin Howell", // ;)
   "Capitals are a little more difficult",
   "How About Some Title Case",
   'Maybe, with some punctuation, "this!" will be a little easier; or not?',
@@ -42,39 +43,37 @@ $(document).ready(function () {
 
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
-  document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
+  document.getElementById("target-letter").innerHTML = beginning[s]; // sets the sentence text
 
   $(document).keydown(function (event) {
     // this function will show the uppercase keyboard, and apply a background to pressed keys
     //let thisKeyString = thisKey.toString(); //**did not work
     let thisKey = event.key;
     console.log(`${thisKey} was just pressed`); //? for debugging
-    let thisKeyCode = event.which; //? for debugging
-    console.log(`${thisKeyCode} code was just pressed`);
+    let thisKeyCode = event.which;
+    console.log(`${thisKeyCode} code was just pressed`); //? for debugging
     //$(`#${thisKey}`).css("background-color", "lightblue");
-
-    //*!  these keys do not hightlight from event.key:  \  '   <spacebar>
-
-    if (thisKeyCode === 220) {
-      // sets highlighting for  \
-      $(`#${92}`).css("background-color", "lightblue");
-      //thisKeyCode = null;
-    }
-    if (thisKeyCode === 222) {
-      // sets highlighting for  '\'
-      $(`#${39}`).css("background-color", "lightblue");
-      //thisKeyCode = null;
-    }
-    if (thisKeyCode === 32) {
-      // sets highlighting for  spacebar
-      $(`#${32}`).css("background-color", "lightblue");
-      //thisKeyCode = null;
-    }
 
     $(`span:contains('${thisKey}')`).css("background-color", "lightblue"); // highlights the key pressed.  selector looks for the specific character within all spans of the html
 
+    //*!  backslash, single quote, and spacebar keys do not hightlight from event.key
+    // fixed this with the IF statements below
+
+    if (thisKeyCode === 220) {
+      // sets highlighting for the backslash key
+      $(`#${92}`).css("background-color", "lightblue");
+    }
+    if (thisKeyCode === 222) {
+      // sets highlighting for the single quote key
+      $(`#${39}`).css("background-color", "lightblue");
+    }
+    if (thisKeyCode === 32) {
+      // sets highlighting for the spacebar
+      $(`#${32}`).css("background-color", "lightblue");
+    }
+
     if (event.key === "Shift") {
-      // when Shift is pressed
+      // when Shift is pressed, this will swap the to the appropriate keyboard
       // console.log("Key down was fired"); //?for debugging
       // console.log("Shift was pressed!");//?for debugging
       // console.log(event.key);//?for debugging
@@ -84,9 +83,11 @@ $(document).ready(function () {
   });
 
   $(document).keyup(function (event) {
-    // this function will hide the uppercase keyboard, and reset the background of pressed keys
+    // this function will swap keyboards, and reset the background of pressed keys
+    //! if 2 keys are held, and one is released, both backgrounds are un-highlighted. - this probably isn't a big deal
+
     $("span").css("background-color", "#F5F5F5"); // removes the highlighting of the key by reverting to the default, i had to hardcode the color.  selector looks for the specific character within all spans of the html
-    $(`#${32}`).css("background-color", "#F5F5F5"); // restores the spacebar background to default
+    $(`#${32}`).css("background-color", "#F5F5F5"); // restores the spacebar background to default. this is separate because in the html, the spacebar is a div, and the above would not capture it
     if (event.key === "Shift") {
       // console.log("Key up was fired"); //?for debugging
       // console.log("Shift was released!"); //?for debugging
