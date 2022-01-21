@@ -29,9 +29,6 @@ const sentences = [
   */
 ];
 
-// let test = sentences[0].split(" ");
-// console.log(test);
-
 $(document).ready(function () {
   let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
 
@@ -43,32 +40,59 @@ $(document).ready(function () {
   currentGameState.currentCharacter = beginning[s][c]; // sets the current character
   currentGameState.currentInput = ""; // sets the current input as an empty string
 
-  console.log(`you need to press ${currentGameState.currentCharacter}`);
+  console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
   document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
 
   $(document).keydown(function (event) {
-    // key down will show the uppercase keyboard
-    let thisKey = event.which;
-    $(`#${thisKey}`).css("background-color", "lightblue"); //selects the key on the board by id
+    // this function will show the uppercase keyboard, and apply a background to pressed keys
+    //let thisKeyString = thisKey.toString(); //**did not work
+    let thisKey = event.key;
+    console.log(`${thisKey} was just pressed`); //? for debugging
+    let thisKeyCode = event.which; //? for debugging
+    console.log(`${thisKeyCode} code was just pressed`);
+    //$(`#${thisKey}`).css("background-color", "lightblue");
+
+    //*!  these keys do not hightlight from event.key:  \  '   <spacebar>
+
+    if (thisKeyCode === 220) {
+      // sets highlighting for  \
+      $(`#${92}`).css("background-color", "lightblue");
+      //thisKeyCode = null;
+    }
+    if (thisKeyCode === 222) {
+      // sets highlighting for  '\'
+      $(`#${39}`).css("background-color", "lightblue");
+      //thisKeyCode = null;
+    }
+    if (thisKeyCode === 32) {
+      // sets highlighting for  spacebar
+      $(`#${32}`).css("background-color", "lightblue");
+      //thisKeyCode = null;
+    }
+
+    $(`span:contains('${thisKey}')`).css("background-color", "lightblue"); // highlights the key pressed.  selector looks for the specific character within all spans of the html
 
     if (event.key === "Shift") {
-      //console.log("Key down was fired");
-      // console.log("Shift was pressed!");
-      // console.log(event.key);
-      $("#keyboard-lower-container").css("display", "none");
-      $("#keyboard-upper-container").css("display", "inherit");
+      // when Shift is pressed
+      // console.log("Key down was fired"); //?for debugging
+      // console.log("Shift was pressed!");//?for debugging
+      // console.log(event.key);//?for debugging
+      $("#keyboard-lower-container").css("display", "none"); // hide the lower keyboard
+      $("#keyboard-upper-container").css("display", "inherit"); // show the upper keyboard - inherit should restore it to the default display
     }
   });
 
   $(document).keyup(function (event) {
-    // key up will hide the uppercase keyboard
+    // this function will hide the uppercase keyboard, and reset the background of pressed keys
+    $("span").css("background-color", "#F5F5F5"); // removes the highlighting of the key by reverting to the default, i had to hardcode the color.  selector looks for the specific character within all spans of the html
+    $(`#${32}`).css("background-color", "#F5F5F5"); // restores the spacebar background to default
     if (event.key === "Shift") {
-      // console.log("Key up was fired");
-      // console.log("Shift was released!");
-      // console.log(event.key);
-      $("#keyboard-upper-container").css("display", "none");
-      $("#keyboard-lower-container").css("display", "inherit");
+      // console.log("Key up was fired"); //?for debugging
+      // console.log("Shift was released!"); //?for debugging
+      // console.log(event.key); //?for debugging
+      $("#keyboard-upper-container").css("display", "none"); // hide the lower keyboard
+      $("#keyboard-lower-container").css("display", "inherit"); // show the upper keyboard - inherit should restore it to the default display
     }
   });
 
@@ -100,6 +124,7 @@ $(document).ready(function () {
     }
 
     //******************************************************When player is ready*****************************************************************************/
+
     if (currentGameState.playerIsReady === true) {
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         //
