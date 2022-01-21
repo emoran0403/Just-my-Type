@@ -1,6 +1,7 @@
 const initialGameState = {
   // makes an object with the intial game state, so that the game may be reset later
   playerIsReady: false,
+  gameIsOver: false,
   incorrectWords: 0,
   currentSentence: null,
   currentCharacter: null,
@@ -8,10 +9,17 @@ const initialGameState = {
   currentInput: null,
 };
 
-const beginning = ["ready"];
+const beginning = [
+  //* makes an array with the sentences for the player to type - these are the instructions
+  // "type this sentence",
+  // "the sentences you need to type will show up here",
+  // "you do not need to press enter or space when you finish a line",
+  //"a timer will start when you finish the next line",
+  "ready",
+];
 
 const sentences = [
-  // makes an array with the sentences for the player to type
+  //* makes an array with the sentences for the player to type - these are the actual game sentences
   "Big one",
   "Small two",
   /*
@@ -150,10 +158,10 @@ $(document).ready(function () {
 /**
  *
  * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard //*? done
- * todo - highlight the current character on the keyboard, then unhighlight it
+ * todo - highlight the current character on the keyboard, then unhighlight it //*? done
+ * todo - make the current sentence show up //*?done
  * todo - add a timer that starts when player has finished typing 'ready'
  * todo - make the yellow block move upon each correct key press
- * todo - make the current sentence show up //*?done
  * todo - split each sentence element into their own array to set up current words
  * todo - if an incorrect character is entered, to reset the current word progress
  * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
@@ -182,8 +190,9 @@ $(document).ready(function () {
  * {
  * keypress function
  * {
- * if not ready {}
- * if ready {}
+ * if not ready {at end of block - set currentGameState.playerIsReady to "true" based on typing the final character of the final word of the "beginning" array}
+ * if ready {at end of block - currentGameState.set gameIsOver to "true" based on typing the final character of the final word of the "beginning" array}
+ * if done{ needs to display the time taken, incorrect instances, a restart button to set currentGameState back to initialGameState}
  * }
  * }
  */
