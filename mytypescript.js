@@ -47,6 +47,28 @@ $(document).ready(function () {
 
   document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
 
+  $(document).keydown(function (event) {
+    // key down will show the uppercase keyboard
+    if (event.key === "Shift") {
+      //console.log("Key down was fired");
+      // console.log("Shift was pressed!");
+      // console.log(event.key);
+      $("#keyboard-lower-container").css("display", "none");
+      $("#keyboard-upper-container").css("display", "inherit");
+    }
+  });
+
+  $(document).keyup(function (event) {
+    // key up will hide the uppercase keyboard
+    if (event.key === "Shift") {
+      // console.log("Key up was fired");
+      // console.log("Shift was released!");
+      // console.log(event.key);
+      $("#keyboard-upper-container").css("display", "none");
+      $("#keyboard-lower-container").css("display", "inherit");
+    }
+  });
+
   $(document).keypress(function (event) {
     // defines the keypress function upon which the game logic runs
     let keyCode = event.which; // stores the ascii code for the key which was pressed
@@ -99,6 +121,8 @@ $(document).ready(function () {
 /**
  *
  * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard
+ *  - upper display starts at style="display: none;"  when shift is held, hide lower and show upper, when shift is released, hide upper and show lower
+ *
  * todo - highlight the current character on the keyboard, then unhighlight it
  * todo - add a timer that starts when player has finished typing 'ready'
  * todo - make the yellow block move upon each correct key press
@@ -119,7 +143,6 @@ $(document).ready(function () {
  if the word is the last word of the sentence, go to the next sentence
  *
  *
- *upper display starts at style="display: none;"  when shift is held, hide lower and show upper, when shift is released, hide upper and show lower
  *
  *
  *
