@@ -49,6 +49,9 @@ $(document).ready(function () {
 
   $(document).keydown(function (event) {
     // key down will show the uppercase keyboard
+    let thisKey = event.which;
+    $(`#${thisKey}`).css("background-color", "lightblue"); //selects the key on the board by id
+
     if (event.key === "Shift") {
       //console.log("Key down was fired");
       // console.log("Shift was pressed!");
@@ -120,9 +123,7 @@ $(document).ready(function () {
 
 /**
  *
- * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard
- *  - upper display starts at style="display: none;"  when shift is held, hide lower and show upper, when shift is released, hide upper and show lower
- *
+ * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard //*? done
  * todo - highlight the current character on the keyboard, then unhighlight it
  * todo - add a timer that starts when player has finished typing 'ready'
  * todo - make the yellow block move upon each correct key press
