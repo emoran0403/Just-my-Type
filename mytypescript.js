@@ -22,6 +22,7 @@ const sentences = [
   //* makes an array with the sentences for the player to type - these are the actual game sentences
   "Big one",
   "Small two",
+  "test three seven",
   /*
   "this one is easy",
   "His name is Ervin Howell", // ;)
@@ -52,6 +53,9 @@ $(document).ready(function () {
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
   document.getElementById("target-letter").innerHTML = beginning[s]; // sets the sentence text
+
+  let wordCount = sentences.join(" ").split(" ").length; // wordCount is the count of the words of the sentences array
+  console.log(wordCount);
 
   $(document).keydown(function (event) {
     // this function will show the uppercase keyboard, and apply a background to pressed keys
@@ -167,7 +171,7 @@ $(document).ready(function () {
  * todo - split each sentence element into their own array to set up current words
  *  - video @1:33 starts the array methods for splitting etc
  * todo - if an incorrect character is entered, to reset the current word progress
- *  - if (currentGameState.currentCharacter !== currentGameState.currentInput) then reset w to 0 and somehow move c as well
+ *  - if (currentGameState.currentCharacter !== currentGameState.currentInput) then keep w and set c=0
  * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
  * todo - 
  * todo - 
