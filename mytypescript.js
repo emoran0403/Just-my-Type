@@ -11,6 +11,7 @@ const initialGameState = {
 
 const beginning = [
   //* makes an array with the sentences for the player to type - these are the instructions
+
   // "type this sentence",
   // "the sentences you need to type will show up here",
   // "you do not need to press enter or space when you finish a line",
@@ -54,16 +55,16 @@ $(document).ready(function () {
 
   document.getElementById("target-letter").innerHTML = beginning[s]; // sets the sentence text
 
-  let wordCount = sentences.join(" ").split(" ").length; // wordCount is the count of the words of the sentences array
-  console.log(wordCount);
+  let wordCount = sentences.join(" ").split(" ").length; // wordCount is the count of the words of the sentences array.  i can reference this later to calc the words per minute
+  //console.log(wordCount);
 
   $(document).keydown(function (event) {
     // this function will show the uppercase keyboard, and apply a background to pressed keys
     //let thisKeyString = thisKey.toString(); //**did not work
     let thisKey = event.key;
-    console.log(`${thisKey} was just pressed`); //? for debugging
+    //console.log(`${thisKey} was just pressed`); //? for debugging
     let thisKeyCode = event.which;
-    console.log(`${thisKeyCode} code was just pressed`); //? for debugging
+    //console.log(`${thisKeyCode} code was just pressed`); //? for debugging
     //$(`#${thisKey}`).css("background-color", "lightblue");
 
     $(`span:contains('${thisKey}')`).css("background-color", "lightblue"); // highlights the key pressed.  selector looks for the specific character within all spans of the html
@@ -124,39 +125,56 @@ $(document).ready(function () {
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
 
         if (c === beginning[0].length) {
-          c = 0;
+          setNewSentence();
           console.log("The player should be ready!");
           currentGameState.playerIsReady = true;
-          currentGameState.currentSentence = sentences[s]; // sets the current sentence
-          currentGameState.currentCharacter = sentences[s][c]; // sets the current character
-          console.log(currentGameState);
-          document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
+      } else {
+        startOverLoser();
       }
     }
 
     //******************************************************When player is ready*****************************************************************************/
 
     if (currentGameState.playerIsReady === true) {
+      //! this fires immediately after player pesses the 'y' from 'ready' which changes the playerIsReady status to true
+      //! the problem is that currentCharacter = B and currentInput = y upon pressing the 'y' from 'ready'
+      //!
+
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         //
         c++;
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
 
         if (c === sentences[s].length) {
-          c = 0;
           s++;
+          setNewSentence();
           console.log("The player is moving on!");
-          document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
-          currentGameState.currentSentence = sentences[s]; // sets the current sentence
-          currentGameState.currentCharacter = sentences[s][c]; // sets the current character
-          console.log(currentGameState);
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
+      } else {
+        console.log(`current char = ${currentGameState.currentCharacter}`);
+        console.log(`current input = ${currentGameState.currentInput}`);
+        startOverLoser();
       }
     }
   });
+
+  function startOverLoser() {
+    c = 0;
+    console.warn("start over loser fired");
+    currentGameState.incorrectWords++;
+    console.warn(currentGameState.incorrectWords);
+    console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+  }
+
+  function setNewSentence() {
+    c = 0; // sets index to zero
+    document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
+    currentGameState.currentSentence = sentences[s]; // sets the current sentence
+    currentGameState.currentCharacter = sentences[s][c]; // sets the current character
+  }
 });
 
 /**
