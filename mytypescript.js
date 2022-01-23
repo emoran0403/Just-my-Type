@@ -12,10 +12,10 @@ const initialGameState = {
 const beginning = [
   //* makes an array with the sentences for the player to type - these are the instructions
 
-  // "type this sentence",
-  // "the sentences you need to type will show up here",
-  // "you do not need to press enter or space when you finish a line",
-  //"a timer will start when you finish the next line",
+  "type this sentence",
+  "the sentences you need to type will show up here",
+  "you do not need to press enter or space when you finish a line",
+  "a timer will start when you finish the next line",
   "ready",
 ];
 
@@ -39,6 +39,21 @@ const sentences = [
   "jk",
   */
 ];
+/*
+const timer = new Date();
+let timeOne = timer.getTime();
+let timeTwo;
+let timeThree;
+
+console.log(timeOne);
+
+
+start timer on document load
+get time upon pressing ready
+
+calc elapsed time
+check if ready and time is greater than elapsed time?
+*/
 
 $(document).ready(function () {
   let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
@@ -120,40 +135,59 @@ $(document).ready(function () {
 
     if (currentGameState.playerIsReady === false) {
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
-        //
+        // When the input matches the expected character
         c++;
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
 
-        if (c === beginning[0].length) {
-          setNewSentence();
+        if (s === beginning.length && c === beginning[s][c].length) {
+          //when the player types the last character of the last sentence, they are done with tutorial
           console.log("The player should be ready!");
+
           currentGameState.playerIsReady = true;
+          currentGameState.currentInput = null; // sets the current input to null so that the startover function does not immediately fire upon pressing the 'y' from 'ready'
+
+          setNewSentence();
+        }
+        if (c === beginning[s][c].length) {
+          //when the player completes a sentence of the tutorial
+          setNewSentence();
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
+        // when the input does not match the expected character
         startOverLoser();
       }
     }
 
     //******************************************************When player is ready*****************************************************************************/
 
-    if (currentGameState.playerIsReady === true) {
+    if (
+      currentGameState.playerIsReady === true &&
+      currentGameState.currentInput
+    ) {
+      //console.log(currentGameState); //? for debugging
       //! this fires immediately after player pesses the 'y' from 'ready' which changes the playerIsReady status to true
       //! the problem is that currentCharacter = B and currentInput = y upon pressing the 'y' from 'ready'
-      //!
+
+      //! i fixed this by setting currentGameState.currentInput = null immediately upon finishing the 'y' from 'ready'
+      //! then i added the && currentGameState.currentInput, which evaluates to false when there is no input, because null is falsy
+      //! upon typing a character, currentGameState.currentInput is assigned a value, which is truthy
 
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
-        //
+        // When the input matches the expected character
         c++;
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
 
         if (c === sentences[s].length) {
-          s++;
+          //!  need to fix this here^^
+          // when the player has reached the end of the current sentence
+          s++; // moves to the next sentence index
           setNewSentence();
           console.log("The player is moving on!");
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
+        // when the input does not match the expected character
         console.log(`current char = ${currentGameState.currentCharacter}`);
         console.log(`current input = ${currentGameState.currentInput}`);
         startOverLoser();
@@ -162,18 +196,38 @@ $(document).ready(function () {
   });
 
   function startOverLoser() {
-    c = 0;
     console.warn("start over loser fired");
+    c = 0; // sets character index to zero
+    console.log(`c is ${c}`);
     currentGameState.incorrectWords++;
-    console.warn(currentGameState.incorrectWords);
+    console.warn(
+      `Your current incorrect word count is: ${currentGameState.incorrectWords}`
+    );
+    currentGameState.currentInput = ""; // sets the current input as an empty string
     console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+
+    if (currentGameState.playerIsReady === false) {
+      // this occurs when an incorrect character is typed during the tutorial
+      currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+    } else {
+      // this occurs when an incorrect character is typed during the game
+      currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
+    }
   }
 
   function setNewSentence() {
-    c = 0; // sets index to zero
-    document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
-    currentGameState.currentSentence = sentences[s]; // sets the current sentence
-    currentGameState.currentCharacter = sentences[s][c]; // sets the current character
+    c = 0; // sets character index to zero
+    s++; // increments the sentence index by 1
+
+    if (currentGameState.playerIsReady === false) {
+      // chooses the correct sentence array for tutorial or in-game
+      currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+      document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
+    } else {
+      // chooses the correct sentence array for tutorial or in-game
+      currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
+      document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
+    }
   }
 });
 
@@ -182,7 +236,7 @@ $(document).ready(function () {
  * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard //*? done
  * todo - highlight the current character on the keyboard, then unhighlight it //*? done
  * todo - make the current sentence show up //*?done
- * todo - add a timer that starts when player has finished typing 'ready' 
+ * todo - add a timer that starts when player has finished typing 'ready'
  *  - use a date function to set a start time, call it again to set an end time, and diff = time elapsed
  * todo - make the yellow block move upon each correct key press
  *  - when c increments, have it also move the yellow block
@@ -191,21 +245,8 @@ $(document).ready(function () {
  * todo - if an incorrect character is entered, to reset the current word progress
  *  - if (currentGameState.currentCharacter !== currentGameState.currentInput) then keep w and set c=0
  * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
- * todo - 
- * todo - 
- *
- *
- *how to check if the correct key was pressed?
- get the ascii code from the event
- translate that into the character
- use if to compare that to the current character
- if true then increment the current letter
- if the letter is the last letter of the word, increment the word
- if the word is the last word of the sentence, go to the next sentence
- *
- *
- *
- *
+ * todo -
+ * todo -
  *
  *
  */
@@ -224,29 +265,22 @@ $(document).ready(function () {
  */
 
 /*
+how to move on when the last char of the last sentence is typed?
+
+s = current sentence
+c = current character
+
+array[s].length is the amount of sentences in the array
+array[s][c].length is the amoung of characters of that particular sentence
+
+thus if s and c are at max, then we are at the end char of the end sentence
+
+if (s = array[s].length && c === array[s][c].length) { then we are at the last char of the last sentence}
+*/
+
+/*
+when to move on to next sentence?
+if (c === array[s][c].length) {then we are at the last char of the particular sentence}
 
 
-      // console.log(keyCode);
-      currentGameState.currentInput = $(`#${keyCode}`).text();
-
-      if (currentGameState.currentCharacter === currentGameState.currentInput) {
-        c++;
-        currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
-        if ((c = sentences[0].length)) {
-          s++;
-          c = 0;
-          console.log("should move on to test sentence 2?");
-          console.log(currentGameState);
-        }
-        console.log(`you need to press ${currentGameState.currentCharacter}`);
-        console.log(`C = ${c}`);
-        console.log(`sentences length = ${sentences[0].length}`);
-      }
-
-      /*
-    if (
-      currentGameState.currentWord[currentGameState.currentWord.length - 1] &&
-      currentGameState.currentInput === currentGameState.currentCharacter
-    ) {
-    }
 */
