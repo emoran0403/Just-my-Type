@@ -68,9 +68,15 @@ $(document).ready(function () {
   let elapsedTime = -1;
   let wordsPerMinute = -1;
 
+  let sentenceHere = document.getElementById("sentence");
+  sentenceHere.innerHTML = beginning[s];
+  let letterHere = document.getElementById("target-letter");
+  let feedback = document.getElementById("feedback");
+
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
-  document.getElementById("target-letter").innerHTML = beginning[s]; // sets the sentence text
+  letterHere.innerHTML = beginning[s][c]; // shows the character text
+  sentenceHere.innerHTML = beginning[s]; // shows the sentence
 
   let wordCount = sentences.join(" ").split(" ").length; // wordCount is the count of the words of the sentences array.  i can reference this later to calc the words per minute
   //console.log(wordCount);
@@ -143,15 +149,18 @@ $(document).ready(function () {
         // When the input matches the expected character
         c++; // this increments the character index
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the 'next' character based on the value of 'c'
+        letterHere.innerHTML = beginning[s][c]; // sets the sentence text
+        sentenceHere.innerHTML = beginning[s]; // shows the sentence
 
         if (s === beginning.length - 1 && c === beginning[s].length) {
+          //! prettier removes the parentheses from (sentences.length-1)
           // this if block moves the player out of the tutorial and into the game if the 2 conditions are met:
           // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           moveToGame();
         }
 
-        console.log(`beginning s is ${beginning[s]}`);
+        // console.log(`beginning s is ${beginning[s]}`); //?for debugging
 
         if (
           c === beginning[s].length &&
@@ -164,7 +173,7 @@ $(document).ready(function () {
           //! i think this is getting called right after the tutorial is over - look at the if block placement?
         }
 
-        console.log(`you need to press ${currentGameState.currentCharacter}`);
+        //console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
         startOverLoser();
@@ -177,21 +186,15 @@ $(document).ready(function () {
       currentGameState.playerIsReady === true &&
       currentGameState.currentInput
     ) {
-      //console.log(currentGameState); //? for debugging
-      //! this if block fires immediately after player pesses the 'y' from 'ready' which changes the playerIsReady status to true
-      //! the problem is that currentCharacter = B and currentInput = y upon pressing the 'y' from 'ready'
-
-      //! i fixed this by setting currentGameState.currentInput = null immediately upon finishing the 'y' from 'ready'
-      //! then i added the && currentGameState.currentInput, which evaluates to false when there is no input, because null is falsy
-      //! however, upon typing a character, currentGameState.currentInput is assigned a value, which is truthy
-
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
         c++; // this increments the character index
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the 'next' character based on the value of 'c'
+        letterHere.innerHTML = sentences[s][c]; // sets the sentence text
+        sentenceHere.innerHTML = sentences[s]; // shows the sentence
 
         if (s === sentences.length - 1 && c === sentences[s].length) {
-          //! try setting (sentences.length-1)
+          //! prettier removes the parentheses from (sentences.length-1)
           // this if block moves the player out of the game and into the results if the 2 conditions are met:
           // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
@@ -199,13 +202,14 @@ $(document).ready(function () {
         }
         if (
           c === sentences[s].length &&
-          currentGameState.playerIsReady === true
+          currentGameState.playerIsReady === true &&
+          s < sentences.length - 1
         ) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           setNewSentence();
         }
-        console.log(`you need to press ${currentGameState.currentCharacter}`);
+        //console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
         startOverLoser();
@@ -228,9 +232,13 @@ $(document).ready(function () {
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+      letterHere.innerHTML = beginning[s][c]; // sets the sentence text
+      sentenceHere.innerHTML = beginning[s]; // shows the sentence
     } else {
       // this occurs when an incorrect character is typed during the game
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
+      letterHere.innerHTML = sentences[s][c]; // sets the sentence text
+      sentenceHere.innerHTML = sentences[s]; // shows the sentence
     }
     console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
   }
@@ -241,19 +249,22 @@ $(document).ready(function () {
 
     if (currentGameState.playerIsReady === false) {
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the 'beginning' array
-      document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
       console.log(currentGameState);
+      letterHere.innerHTML = beginning[s][c]; // sets the sentence text
+      sentenceHere.innerHTML = beginning[s]; // shows the sentence
     } else {
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the 'beginning' array
-      document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
       console.log(currentGameState);
+      letterHere.innerHTML = sentences[s][c]; // sets the sentence text
+      sentenceHere.innerHTML = sentences[s]; // shows the sentence
     }
   }
 
   function showResults() {
     console.log("The game is over, results will show later");
+    feedback.innerHTML = `You typed ${wordCount} words in y minutes for a words per minute of z`;
 
     /*
     console.log(
@@ -270,7 +281,9 @@ $(document).ready(function () {
     console.log("The player should be ready!");
     currentGameState.playerIsReady = true; //  sets the player is ready status to true so that the game can begin
     currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character of the first sentence of the sentences array
-    document.getElementById("target-letter").innerHTML = sentences[s]; // displays the current sentence text
+    letterHere.innerHTML = sentences[s][c]; // displays the current sentence text
+    sentenceHere.innerHTML = sentences[s]; // shows the sentence
+
     currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
   }
 });
