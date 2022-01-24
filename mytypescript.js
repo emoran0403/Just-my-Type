@@ -144,7 +144,7 @@ $(document).ready(function () {
         c++; // this increments the character index
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the 'next' character based on the value of 'c'
 
-        if (s === beginning.length && c === beginning[s].length) {
+        if (s === beginning.length - 1 && c === beginning[s].length) {
           // this if block moves the player out of the tutorial and into the game if the 2 conditions are met:
           // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
@@ -190,7 +190,8 @@ $(document).ready(function () {
         c++; // this increments the character index
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the 'next' character based on the value of 'c'
 
-        if (s === sentences.length && c === sentences[s].length) {
+        if (s === sentences.length - 1 && c === sentences[s].length) {
+          //! try setting (sentences.length-1)
           // this if block moves the player out of the game and into the results if the 2 conditions are met:
           // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
@@ -198,7 +199,7 @@ $(document).ready(function () {
         }
         if (
           c === sentences[s].length &&
-          currentGameState.playerIsReady === false
+          currentGameState.playerIsReady === true
         ) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
@@ -237,6 +238,7 @@ $(document).ready(function () {
   function setNewSentence() {
     c = 0; // sets character index to zero, so that the player starts at the beginning of the new sentence
     s++; // increments the sentence index by 1, so that the player will start on the next sentence
+
     if (currentGameState.playerIsReady === false) {
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the 'beginning' array
       document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
@@ -252,6 +254,7 @@ $(document).ready(function () {
 
   function showResults() {
     console.log("The game is over, results will show later");
+
     /*
     console.log(
       `You typed ${currentGameState.incorrectWords} words incorrectly`
