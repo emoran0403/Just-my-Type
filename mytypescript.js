@@ -12,10 +12,10 @@ const initialGameState = {
 const beginning = [
   //* makes an array with the sentences for the player to type - these are the instructions
 
-  "type", //this sentence",
-  "the", //sentences", // you need to type will show up here",
-  "you do", // not need to press enter or space when you finish a line",
-  "a timer", // will start when you finish the next line",
+  "type", // these sentences",
+  "you", // will need punctuation!",
+  "don't", // press enter or space when you finish a line",
+  "time", // will start when you finish the next line",
   "ready",
 ];
 
@@ -23,7 +23,7 @@ const sentences = [
   //* makes an array with the sentences for the player to type - these are the actual game sentences
   "Big one",
   "Small two",
-  "test three seven",
+  "test three",
   /*
   "this one is easy",
   "His name is Ervin Howell", // ;)
@@ -72,6 +72,8 @@ $(document).ready(function () {
   sentenceHere.innerHTML = beginning[s];
   let letterHere = document.getElementById("target-letter");
   let feedback = document.getElementById("feedback");
+
+  let yellowBlock = $("#yellow-block"); // enables movement of the yellow block with the updatePage function
 
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
@@ -148,6 +150,7 @@ $(document).ready(function () {
         // When the input matches the expected character
         c++; // this increments the character index
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the 'next' character based on the value of 'c'
+
         updatePage();
 
         if (s === beginning.length - 1 && c === beginning[s].length) {
@@ -214,6 +217,8 @@ $(document).ready(function () {
     }
   });
 
+  //******************************************************Functions here*****************************************************************************/
+
   function startOverLoser() {
     // this function is called when the player types an incorrect character
     console.warn("start over loser fired"); //? for debugging
@@ -229,13 +234,12 @@ $(document).ready(function () {
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
-      updatePage();
     } else {
       // this occurs when an incorrect character is typed during the game
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
-      updatePage();
     }
     console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+    updatePage();
   }
 
   function setNewSentence() {
@@ -281,13 +285,16 @@ $(document).ready(function () {
     currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
   }
   function updatePage() {
-    // this function updates the page by calling the update character and update sentence functions together
+    // this function updates the page by calling the update character and update sentence functions, and also moves the yellow block
+    let yellowPixelMovement = newYellowPosition();
+    yellowBlock.css("left", `${yellowPixelMovement}px`);
+
     updateCharacterOnPage();
     updateSentenceOnPage();
   }
   function updateCharacterOnPage() {
     if (currentGameState.playerIsReady === false) {
-      // this function will change the current character on the page
+      // this function will change the current character on the page with respect to playerIsReady
       letterHere.innerHTML = beginning[s][c]; // sets the sentence text
     } else {
       letterHere.innerHTML = sentences[s][c]; // sets the sentence text
@@ -295,11 +302,17 @@ $(document).ready(function () {
   }
   function updateSentenceOnPage() {
     if (currentGameState.playerIsReady === false) {
-      // this function will change the current sentence on the page
+      // this function will change the current sentence on the page with respect to playerIsReady
       sentenceHere.innerHTML = beginning[s]; // shows the sentence
     } else {
       sentenceHere.innerHTML = sentences[s]; // shows the sentence
     }
+  }
+  function newYellowPosition() {
+    // this function moves the yellow block according to the current character position
+    // note than when 'startOverLoser' is called, c is set to '0' before this function is called, thus returning the block to the starting position
+    let yellowOffSet = c * 17.5;
+    return yellowOffSet;
   }
 });
 
