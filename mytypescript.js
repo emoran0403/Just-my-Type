@@ -12,10 +12,10 @@ const initialGameState = {
 const beginning = [
   //* makes an array with the sentences for the player to type - these are the instructions
 
-  "type this sentence",
-  "the sentences you need to type will show up here",
-  "you do not need to press enter or space when you finish a line",
-  "a timer will start when you finish the next line",
+  "type", //this sentence",
+  "the", //sentences", // you need to type will show up here",
+  "you do", // not need to press enter or space when you finish a line",
+  "a timer", // will start when you finish the next line",
   "ready",
 ];
 
@@ -135,24 +135,29 @@ $(document).ready(function () {
 
     //******************************************************When player is not ready*****************************************************************************/
 
-    if (currentGameState.playerIsReady === false) {
+    if (
+      currentGameState.playerIsReady === false &&
+      currentGameState.currentInput
+    ) {
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
-        c++;
-        currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+        c++; // this increments the character index
+        currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the 'next' character based on the value of 'c'
 
-        if (s === beginning.length && c === beginning[s][c].length) {
-          //when the player types the last character of the last sentence, they are done with tutorial
-          console.log("The player should be ready!");
-
-          currentGameState.playerIsReady = true;
-          currentGameState.currentInput = null; // sets the current input to null so that the startover function does not immediately fire upon pressing the 'y' from 'ready'
-
-          setNewSentence();
+        if (s === beginning.length && c === beginning[s].length) {
+          // this if block moves the player out of the tutorial and into the game if the 2 conditions are met:
+          // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
+          // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
+          moveToGame();
         }
-        if (c === beginning[s][c].length) {
-          //when the player completes a sentence of the tutorial
+        if (
+          c === beginning[s].length &&
+          currentGameState.playerIsReady === false
+        ) {
+          // this if block just checks if the player advances to the next sentence
+          // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           setNewSentence();
+          //! i think this is getting called right after the tutorial is over - look at the if block placement?
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
@@ -177,37 +182,42 @@ $(document).ready(function () {
 
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
-        c++;
-        currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
+        c++; // this increments the character index
+        currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the 'next' character based on the value of 'c'
 
-        if (c === sentences[s].length) {
-          //!  need to fix this here^^
-          // when the player has reached the end of the current sentence
-          s++; // moves to the next sentence index
+        if (s === sentences.length && c === sentences[s].length) {
+          // this if block moves the player out of the game and into the results if the 2 conditions are met:
+          // first condition checks if the 's' matches the length of the entire array, thus if the player is at the last sentence of the array
+          // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
+          showResults();
+        }
+        if (
+          c === sentences[s].length &&
+          currentGameState.playerIsReady === false
+        ) {
+          // this if block just checks if the player advances to the next sentence
+          // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           setNewSentence();
-          console.log("The player is moving on!");
         }
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
-        console.log(`current char = ${currentGameState.currentCharacter}`);
-        console.log(`current input = ${currentGameState.currentInput}`);
         startOverLoser();
       }
     }
   });
 
   function startOverLoser() {
-    console.warn("start over loser fired");
+    // this function is called when the player types an incorrect character
+    console.warn("start over loser fired"); //? for debugging
     c = 0; // sets character index to zero
+    console.log(`c is now ${c}`); //? for debugging
     currentGameState.incorrectWords++; // increments the incorrect word count
-    console.log(`c is ${c}`); //? for debugging
     console.warn(
-      //? for debuggin
+      //? for debugging
       `Your current incorrect word count is: ${currentGameState.incorrectWords}`
     );
-    currentGameState.currentInput = ""; // sets the current input as an empty string
-    console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+    currentGameState.currentInput = null; // sets the current input to null
 
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
@@ -216,30 +226,44 @@ $(document).ready(function () {
       // this occurs when an incorrect character is typed during the game
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
     }
+    console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
   }
 
   function setNewSentence() {
-    c = 0; // sets character index to zero
-    s++; // increments the sentence index by 1
-
+    c = 0; // sets character index to zero, so that the player starts at the beginning of the new sentence
+    s++; // increments the sentence index by 1, so that the player will start on the next sentence
     if (currentGameState.playerIsReady === false) {
-      // chooses the correct sentence array for tutorial or in-game
-      currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
+      currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the 'beginning' array
       document.getElementById("target-letter").innerHTML = beginning[s]; // sets the current sentence text
+      currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
+      console.log(currentGameState);
     } else {
-      // chooses the correct sentence array for tutorial or in-game
-      currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
+      currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the 'beginning' array
       document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
+      currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
+      console.log(currentGameState);
     }
   }
 
   function showResults() {
-    console.log("The game is over!");
+    console.log("The game is over, results will show later");
+    /*
     console.log(
       `You typed ${currentGameState.incorrectWords} words incorrectly`
     );
     console.log(`You took ${elapsedTime} to finish the game`);
     console.log(`You typed at a rate of ${wordsPerMinute}`);
+    */
+  }
+  function moveToGame() {
+    // moves the player out of the tutorial and into the game
+    c = 0; // sets 'c' to zero to ensure the player starts on the first character
+    s = 0; // sets 's' to zero to ensure the player starts on the first sentence
+    console.log("The player should be ready!");
+    currentGameState.playerIsReady = true; //  sets the player is ready status to true so that the game can begin
+    currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character of the first sentence of the sentences array
+    document.getElementById("target-letter").innerHTML = sentences[s]; // displays the current sentence text
+    currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
   }
 });
 
@@ -282,12 +306,16 @@ how to move on when the last char of the last sentence is typed?
 s = current sentence
 c = current character
 
-array[s].length is the amount of sentences in the array
-array[s][c].length is the amoung of characters of that particular sentence
+//*  array[s][c]
+
+array.length is the amount of sentences in the array
+array[s].length is the amount of characters for sentence 's'
+array[s][c] is the character at index 'c' in sentence 's'
+array[s][c].length looks at how many characters are at the 'c' position in sentence 's', this will always be 1
 
 thus if s and c are at max, then we are at the end char of the end sentence
 
-if (s = array[s].length && c === array[s][c].length) { then we are at the last char of the last sentence}
+//! this wont work if (s = array[s].length && c === array[s][c].length) { then we are at the last char of the last sentence}
 */
 
 /*
