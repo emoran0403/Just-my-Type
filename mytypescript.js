@@ -12,61 +12,43 @@ const initialGameState = {
 const beginning = [
   //* makes an array with the sentences for the player to type - these are the instructions
 
-  "type", // these sentences",
-  "you", // will need punctuation!",
-  "don't", // press enter or space when you finish a line",
-  "time", // will start when you finish the next line",
+  "type these sentences",
+  "you will need punctuation!",
+  "don't press enter or space when you finish a line",
+  "time will start when you finish the next line",
   "ready",
 ];
 
 const sentences = [
   //* makes an array with the sentences for the player to type - these are the actual game sentences
-  "Big one",
-  "Small two",
-  "test three",
-  /*
+
   "this one is easy",
   "His name is Ervin Howell", // ;)
   "Capitals are a little more difficult",
   "How About Some Title Case",
-  'Maybe, with some punctuation, "this!" will be a little easier; or not?',
+  `"now", to 'test', your, punctiation!`,
   "howaboutasentencetypedasifyourspacebarwasbroken",
   "maybe-you-just-want-to-dash-your-way-through-the-game",
   "their, they're, there, to, two, too",
   "1, 1, 2, 3, 5, 8, and 13 start the Fibonacci Sequence",
-  "(-b+sqrt(b^2-4ac))/2a and (-b-sqrt(b^2-4ac)) give the roots of the general quadratic: ax^2+bx+c=0",
   "last one!",
   "jk",
-  */
 ];
-/*
-const timer = new Date();
-let timeOne = timer.getTime();
-let timeTwo;
-let timeThree;
-
-console.log(timeOne);
-
-
-start timer on document load
-get time upon pressing ready
-
-calc elapsed time
-check if ready and time is greater than elapsed time?
-*/
 
 $(document).ready(function () {
   let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
 
-  // setting the currentGateState variables
+  let startTime; // this declares an undefined variable where i will later store the start time - startTime = Date.now();
+  let endTime; // this declares an undefined variable where i will later store the end time - endTime = Date.now();
+  let elapsedTime; // this declares an undefined variable where i will later store the elapsedTime - elapsedTime = endTime - startTime;
+
+  // setting the currentGameState variables
   let s = 0; // serves as the index of the current sentence to traverse through the sentences array
   //let w = 0; // serves as the index of the current word to traverse through the sentences array
   let c = 0; // serves as the index of the current character
   currentGameState.currentSentence = beginning[s]; // sets the current sentence
   currentGameState.currentCharacter = beginning[s][c]; // sets the current character
   currentGameState.currentInput = ""; // sets the current input as an empty string
-  let elapsedTime = -1;
-  let wordsPerMinute = -1;
 
   let sentenceHere = document.getElementById("sentence");
   sentenceHere.innerHTML = beginning[s];
@@ -171,10 +153,7 @@ $(document).ready(function () {
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           console.log(`beginning s is ${beginning[s]}`);
           setNewSentence();
-          //! i think this is getting called right after the tutorial is over - look at the if block placement?
         }
-
-        //console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
         startOverLoser();
@@ -209,7 +188,6 @@ $(document).ready(function () {
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           setNewSentence();
         }
-        //console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
         startOverLoser();
@@ -222,23 +200,24 @@ $(document).ready(function () {
   function startOverLoser() {
     // this function is called when the player types an incorrect character
     console.warn("start over loser fired"); //? for debugging
+    //console.log(`incorrectWords = ${currentGameState.incorrectWords}`);//? for debugging
     c = 0; // sets character index to zero
-    console.log(`c is now ${c}`); //? for debugging
-    currentGameState.incorrectWords++; // increments the incorrect word count
-    console.warn(
-      //? for debugging
-      `Your current incorrect word count is: ${currentGameState.incorrectWords}`
-    );
+    //console.log(`c is now ${c}`); //? for debugging
+    //console.warn()`Your current incorrect word count is: ${currentGameState.incorrectWords}`); //? for debugging
     currentGameState.currentInput = null; // sets the current input to null
-
+    /* //*! this never changes to red :/
+    yellowBlock.css("background-color", `red`); // turns block red
+    setTimeout(updatePage(), 250); //  will reset block to yellow and starting position after 250ms
+*/
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
     } else {
       // this occurs when an incorrect character is typed during the game
+      currentGameState.incorrectWords++; // increments the incorrect word count, but only when the player is ready
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
     }
-    console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+    //console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
     updatePage();
   }
 
@@ -260,10 +239,17 @@ $(document).ready(function () {
   }
 
   function showResults() {
-    console.log("The game is over, results will show later");
+    console.log("The game is over, results will show on-screen");
+    endTime = Date.now(); // this stores the end time
+
+    let delta = endTime - startTime; // calculates the raw elapsed time
+    elapsedTime = Math.trunc((Math.floor(delta / 1000) / 60) * 100) / 100;
+
     letterHere.innerHTML = "";
     sentenceHere.innerHTML = "";
-    feedback.innerHTML = `You typed ${wordCount} words in y minutes for a words per minute of z`;
+
+    let wordsPerMinute = Math.trunc((wordCount / elapsedTime) * 100) / 100;
+    feedback.innerHTML = `You typed ${wordCount} words (with ${currentGameState.incorrectWords} mistakes) in ${elapsedTime} minutes for a words per minute of ${wordsPerMinute}`;
 
     /*
     console.log(
@@ -275,6 +261,7 @@ $(document).ready(function () {
   }
   function moveToGame() {
     // moves the player out of the tutorial and into the game
+    startTime = Date.now(); // starts the timer
     c = 0; // sets 'c' to zero to ensure the player starts on the first character
     s = 0; // sets 's' to zero to ensure the player starts on the first sentence
     console.log("The player should be ready!");
@@ -286,11 +273,12 @@ $(document).ready(function () {
   }
   function updatePage() {
     // this function updates the page by calling the update character and update sentence functions, and also moves the yellow block
-    let yellowPixelMovement = newYellowPosition();
-    yellowBlock.css("left", `${yellowPixelMovement}px`);
+    //let yellowPixelMovement = newYellowPosition();
+    //yellowBlock.css("left", `${yellowPixelMovement}px`);
 
     updateCharacterOnPage();
     updateSentenceOnPage();
+    newYellowPosition();
   }
   function updateCharacterOnPage() {
     if (currentGameState.playerIsReady === false) {
@@ -311,8 +299,10 @@ $(document).ready(function () {
   function newYellowPosition() {
     // this function moves the yellow block according to the current character position
     // note than when 'startOverLoser' is called, c is set to '0' before this function is called, thus returning the block to the starting position
+    yellowBlock.css("background-color", `yellow`); // turns block yellow
+
     let yellowOffSet = c * 17.5;
-    return yellowOffSet;
+    yellowBlock.css("left", `${yellowOffSet}px`);
   }
 });
 
@@ -321,15 +311,17 @@ $(document).ready(function () {
  * todo - make keypress function detect if shift was pressed so i can hide / display the proper keyboard //*? done
  * todo - highlight the current character on the keyboard, then unhighlight it //*? done
  * todo - make the current sentence show up //*?done
+ *
  * todo - add a timer that starts when player has finished typing 'ready'
  *  - use a date function to set a start time, call it again to set an end time, and diff = time elapsed
- * todo - make the yellow block move upon each correct key press
+ *
+ * todo - make the yellow block move upon each correct key press //*? done
  *  - when c increments, have it also move the yellow block
- * todo - split each sentence element into their own array to set up current words
+ * todo - split each sentence element into their own array to set up current words //*? done
  *  - video @1:33 starts the array methods for splitting etc
- * todo - if an incorrect character is entered, to reset the current word progress
+ * todo - if an incorrect character is entered, to reset the current word progress//*? this restarts the entire sentence, not the current word
  *  - if (currentGameState.currentCharacter !== currentGameState.currentInput) then keep w and set c=0
- * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence
+ * todo - move on from a sentence element in the sentences array after finishing the last work in that sentence//*? done
  * todo -
  * todo -
  *
