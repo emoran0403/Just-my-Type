@@ -65,6 +65,8 @@ $(document).ready(function () {
   currentGameState.currentSentence = beginning[s]; // sets the current sentence
   currentGameState.currentCharacter = beginning[s][c]; // sets the current character
   currentGameState.currentInput = ""; // sets the current input as an empty string
+  let elapsedTime = -1;
+  let wordsPerMinute = -1;
 
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
@@ -166,12 +168,12 @@ $(document).ready(function () {
       currentGameState.currentInput
     ) {
       //console.log(currentGameState); //? for debugging
-      //! this fires immediately after player pesses the 'y' from 'ready' which changes the playerIsReady status to true
+      //! this if block fires immediately after player pesses the 'y' from 'ready' which changes the playerIsReady status to true
       //! the problem is that currentCharacter = B and currentInput = y upon pressing the 'y' from 'ready'
 
       //! i fixed this by setting currentGameState.currentInput = null immediately upon finishing the 'y' from 'ready'
       //! then i added the && currentGameState.currentInput, which evaluates to false when there is no input, because null is falsy
-      //! upon typing a character, currentGameState.currentInput is assigned a value, which is truthy
+      //! however, upon typing a character, currentGameState.currentInput is assigned a value, which is truthy
 
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
@@ -198,9 +200,10 @@ $(document).ready(function () {
   function startOverLoser() {
     console.warn("start over loser fired");
     c = 0; // sets character index to zero
-    console.log(`c is ${c}`);
-    currentGameState.incorrectWords++;
+    currentGameState.incorrectWords++; // increments the incorrect word count
+    console.log(`c is ${c}`); //? for debugging
     console.warn(
+      //? for debuggin
       `Your current incorrect word count is: ${currentGameState.incorrectWords}`
     );
     currentGameState.currentInput = ""; // sets the current input as an empty string
@@ -228,6 +231,15 @@ $(document).ready(function () {
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
       document.getElementById("target-letter").innerHTML = sentences[s]; // sets the current sentence text
     }
+  }
+
+  function showResults() {
+    console.log("The game is over!");
+    console.log(
+      `You typed ${currentGameState.incorrectWords} words incorrectly`
+    );
+    console.log(`You took ${elapsedTime} to finish the game`);
+    console.log(`You typed at a rate of ${wordsPerMinute}`);
   }
 });
 
