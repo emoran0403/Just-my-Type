@@ -75,8 +75,7 @@ $(document).ready(function () {
 
   console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
 
-  letterHere.innerHTML = beginning[s][c]; // shows the character text
-  sentenceHere.innerHTML = beginning[s]; // shows the sentence
+  updatePage();
 
   let wordCount = sentences.join(" ").split(" ").length; // wordCount is the count of the words of the sentences array.  i can reference this later to calc the words per minute
   //console.log(wordCount);
@@ -149,8 +148,7 @@ $(document).ready(function () {
         // When the input matches the expected character
         c++; // this increments the character index
         currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the 'next' character based on the value of 'c'
-        letterHere.innerHTML = beginning[s][c]; // sets the sentence text
-        sentenceHere.innerHTML = beginning[s]; // shows the sentence
+        updatePage();
 
         if (s === beginning.length - 1 && c === beginning[s].length) {
           //! prettier removes the parentheses from (sentences.length-1)
@@ -190,8 +188,7 @@ $(document).ready(function () {
         // When the input matches the expected character
         c++; // this increments the character index
         currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the 'next' character based on the value of 'c'
-        letterHere.innerHTML = sentences[s][c]; // sets the sentence text
-        sentenceHere.innerHTML = sentences[s]; // shows the sentence
+        updatePage();
 
         if (s === sentences.length - 1 && c === sentences[s].length) {
           //! prettier removes the parentheses from (sentences.length-1)
@@ -232,13 +229,11 @@ $(document).ready(function () {
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
-      letterHere.innerHTML = beginning[s][c]; // sets the sentence text
-      sentenceHere.innerHTML = beginning[s]; // shows the sentence
+      updatePage();
     } else {
       // this occurs when an incorrect character is typed during the game
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
-      letterHere.innerHTML = sentences[s][c]; // sets the sentence text
-      sentenceHere.innerHTML = sentences[s]; // shows the sentence
+      updatePage();
     }
     console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
   }
@@ -251,19 +246,19 @@ $(document).ready(function () {
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the 'beginning' array
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
       console.log(currentGameState);
-      letterHere.innerHTML = beginning[s][c]; // sets the sentence text
-      sentenceHere.innerHTML = beginning[s]; // shows the sentence
+      updatePage();
     } else {
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the 'beginning' array
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
       console.log(currentGameState);
-      letterHere.innerHTML = sentences[s][c]; // sets the sentence text
-      sentenceHere.innerHTML = sentences[s]; // shows the sentence
+      updatePage();
     }
   }
 
   function showResults() {
     console.log("The game is over, results will show later");
+    letterHere.innerHTML = "";
+    sentenceHere.innerHTML = "";
     feedback.innerHTML = `You typed ${wordCount} words in y minutes for a words per minute of z`;
 
     /*
@@ -281,10 +276,30 @@ $(document).ready(function () {
     console.log("The player should be ready!");
     currentGameState.playerIsReady = true; //  sets the player is ready status to true so that the game can begin
     currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character of the first sentence of the sentences array
-    letterHere.innerHTML = sentences[s][c]; // displays the current sentence text
-    sentenceHere.innerHTML = sentences[s]; // shows the sentence
+    updatePage();
 
     currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
+  }
+  function updatePage() {
+    // this function updates the page by calling the update character and update sentence functions together
+    updateCharacterOnPage();
+    updateSentenceOnPage();
+  }
+  function updateCharacterOnPage() {
+    if (currentGameState.playerIsReady === false) {
+      // this function will change the current character on the page
+      letterHere.innerHTML = beginning[s][c]; // sets the sentence text
+    } else {
+      letterHere.innerHTML = sentences[s][c]; // sets the sentence text
+    }
+  }
+  function updateSentenceOnPage() {
+    if (currentGameState.playerIsReady === false) {
+      // this function will change the current sentence on the page
+      sentenceHere.innerHTML = beginning[s]; // shows the sentence
+    } else {
+      sentenceHere.innerHTML = sentences[s]; // shows the sentence
+    }
   }
 });
 
