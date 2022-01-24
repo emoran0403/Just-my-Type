@@ -150,15 +150,20 @@ $(document).ready(function () {
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           moveToGame();
         }
+
+        console.log(`beginning s is ${beginning[s]}`);
+
         if (
           c === beginning[s].length &&
           currentGameState.playerIsReady === false
         ) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
+          console.log(`beginning s is ${beginning[s]}`);
           setNewSentence();
           //! i think this is getting called right after the tutorial is over - look at the if block placement?
         }
+
         console.log(`you need to press ${currentGameState.currentCharacter}`);
       } else {
         // when the input does not match the expected character
