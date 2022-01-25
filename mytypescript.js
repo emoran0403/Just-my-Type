@@ -205,10 +205,9 @@ $(document).ready(function () {
     //console.log(`c is now ${c}`); //? for debugging
     //console.warn()`Your current incorrect word count is: ${currentGameState.incorrectWords}`); //? for debugging
     currentGameState.currentInput = null; // sets the current input to null
-    /* //*! this never changes to red :/
-    yellowBlock.css("background-color", `red`); // turns block red
-    setTimeout(updatePage(), 250); //  will reset block to yellow and starting position after 250ms
-*/
+    //*! this never changes to red :/
+    $("#yellow-block").css("background-color", `red`); // turns block red
+
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the beginning array
@@ -217,8 +216,21 @@ $(document).ready(function () {
       currentGameState.incorrectWords++; // increments the incorrect word count, but only when the player is ready
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the beginning array
     }
+
+    setTimeout(function () {
+      // this has to go below the if else block to ensure the page properly updates with the correct sentence
+      // sets a timer to remove the red and reset the yellow block
+      updatePage();
+    }, 250);
+
+    /*  below is arrow shorthand notation
+    setTimeout(() => {
+      //console.log("Hit here;");
+      updatePage();
+    }, 250);
+    */
     //console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
-    updatePage();
+    //updatePage();
   }
 
   function setNewSentence() {
