@@ -205,8 +205,10 @@ $(document).ready(function () {
     //console.log(`c is now ${c}`); //? for debugging
     //console.warn()`Your current incorrect word count is: ${currentGameState.incorrectWords}`); //? for debugging
     currentGameState.currentInput = null; // sets the current input to null
-    //*! this never changes to red :/
     $("#yellow-block").css("background-color", `red`); // turns block red
+
+    var audio = new Audio("soundEffect.m4a");
+    audio.play();
 
     if (currentGameState.playerIsReady === false) {
       // this occurs when an incorrect character is typed during the tutorial
