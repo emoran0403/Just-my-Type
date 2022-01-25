@@ -26,7 +26,7 @@ const sentences = [
   "His name is Ervin Howell", // ;)
   "Capitals are a little more difficult",
   "How About Some Title Case",
-  `"now", to 'test', your, punctiation!`,
+  `"now", to 'test', your, punctuation!`,
   "howaboutasentencetypedasifyourspacebarwasbroken",
   "maybe-you-just-want-to-dash-your-way-through-the-game",
   "their, they're, there, to, two, too",
@@ -36,7 +36,8 @@ const sentences = [
 ];
 
 $(document).ready(function () {
-  let currentGameState = { ...initialGameState }; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
+  let currentGameState = { ...initialGameState };
+  let gameIsOver = false; // this copies the initialGameState object and names it currentGameState.  it has to go outside the keypress func, otherwise it will fire on every key
 
   let startTime; // this declares an undefined variable where i will later store the start time - startTime = Date.now();
   let endTime; // this declares an undefined variable where i will later store the end time - endTime = Date.now();
@@ -57,7 +58,7 @@ $(document).ready(function () {
 
   let yellowBlock = $("#yellow-block"); // enables movement of the yellow block with the updatePage function
 
-  console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
+  //console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press //? for debugging
 
   updatePage();
 
@@ -120,7 +121,12 @@ $(document).ready(function () {
     // defines the keypress function upon which the game logic runs
     let keyCode = event.which; // stores the ascii code for the key which was pressed
     currentGameState.currentInput = $(`#${keyCode}`).text(); // gets the letter that was pressed via jQuery // <document.getElementById(keyCode).innerHTML;> // gets the letter that was pressed via DOM
-    console.log(`you pressed ${currentGameState.currentInput}`); // logs the key that was pressed as a letter not ascii
+    //console.log(`you pressed ${currentGameState.currentInput}`); // logs the key that was pressed as a letter not ascii
+
+    if (gameIsOver) {
+      // this resets the game - I know we mentioned setting currentGameState = initialGameState but I couldn't make that work
+      window.location.reload();
+    }
 
     //******************************************************When player is not ready*****************************************************************************/
 
@@ -151,7 +157,7 @@ $(document).ready(function () {
         ) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
-          console.log(`beginning s is ${beginning[s]}`);
+          //console.log(`beginning s is ${beginning[s]}`);
           setNewSentence();
         }
       } else {
@@ -224,15 +230,6 @@ $(document).ready(function () {
       // sets a timer to remove the red and reset the yellow block
       updatePage();
     }, 250);
-
-    /*  below is arrow shorthand notation
-    setTimeout(() => {
-      //console.log("Hit here;");
-      updatePage();
-    }, 250);
-    */
-    //console.log(`you need to press ${currentGameState.currentCharacter}`); // logs the current character to press
-    //updatePage();
   }
 
   function setNewSentence() {
@@ -253,32 +250,25 @@ $(document).ready(function () {
   }
 
   function showResults() {
-    console.log("The game is over, results will show on-screen");
+    //console.log("The game is over, results will show on-screen");
+    gameIsOver = true;
     endTime = Date.now(); // this stores the end time
 
     let delta = endTime - startTime; // calculates the raw elapsed time
-    elapsedTime = Math.trunc((Math.floor(delta / 1000) / 60) * 100) / 100;
+    elapsedTime = Math.trunc((Math.floor(delta / 1000) / 60) * 100) / 100; // turns raw elapsed time into mins with 2 decimals
 
     letterHere.innerHTML = "";
     sentenceHere.innerHTML = "";
 
-    let wordsPerMinute = Math.trunc((wordCount / elapsedTime) * 100) / 100;
-    feedback.innerHTML = `You typed ${wordCount} words (with ${currentGameState.incorrectWords} mistakes) in ${elapsedTime} minutes for a words per minute of ${wordsPerMinute}`;
-
-    /*
-    console.log(
-      `You typed ${currentGameState.incorrectWords} words incorrectly`
-    );
-    console.log(`You took ${elapsedTime} to finish the game`);
-    console.log(`You typed at a rate of ${wordsPerMinute}`);
-    */
+    let wordsPerMinute = Math.trunc((wordCount / elapsedTime) * 100) / 100; // calcs words per minute to 2 decimals
+    feedback.innerHTML = `You typed ${wordCount} words (with ${currentGameState.incorrectWords} mistakes) in ${elapsedTime} minutes for a words per minute of ${wordsPerMinute}.  You can press any key to play again from the tutorial.`;
   }
   function moveToGame() {
     // moves the player out of the tutorial and into the game
     startTime = Date.now(); // starts the timer
     c = 0; // sets 'c' to zero to ensure the player starts on the first character
     s = 0; // sets 's' to zero to ensure the player starts on the first sentence
-    console.log("The player should be ready!");
+    //console.log("The player should be ready!");
     currentGameState.playerIsReady = true; //  sets the player is ready status to true so that the game can begin
     currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character of the first sentence of the sentences array
     updatePage();
@@ -298,8 +288,14 @@ $(document).ready(function () {
     if (currentGameState.playerIsReady === false) {
       // this function will change the current character on the page with respect to playerIsReady
       letterHere.innerHTML = beginning[s][c]; // sets the sentence text
+      if (beginning[s][c] === " ") {
+        letterHere.innerHTML = `space bar`;
+      }
     } else {
       letterHere.innerHTML = sentences[s][c]; // sets the sentence text
+      if (sentences[s][c] === " ") {
+        letterHere.innerHTML = `space bar`;
+      }
     }
   }
   function updateSentenceOnPage() {
