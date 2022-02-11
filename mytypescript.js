@@ -130,10 +130,7 @@ $(document).ready(function () {
 
     //******************************************************When player is not ready*****************************************************************************/
 
-    if (
-      currentGameState.playerIsReady === false &&
-      currentGameState.currentInput
-    ) {
+    if (currentGameState.playerIsReady === false && currentGameState.currentInput) {
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
         c++; // this increments the character index
@@ -151,10 +148,7 @@ $(document).ready(function () {
 
         // console.log(`beginning s is ${beginning[s]}`); //?for debugging
 
-        if (
-          c === beginning[s].length &&
-          currentGameState.playerIsReady === false
-        ) {
+        if (c === beginning[s].length && currentGameState.playerIsReady === false) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           //console.log(`beginning s is ${beginning[s]}`);
@@ -168,10 +162,7 @@ $(document).ready(function () {
 
     //******************************************************When player is ready*****************************************************************************/
 
-    if (
-      currentGameState.playerIsReady === true &&
-      currentGameState.currentInput
-    ) {
+    if (currentGameState.playerIsReady === true && currentGameState.currentInput) {
       if (currentGameState.currentCharacter === currentGameState.currentInput) {
         // When the input matches the expected character
         c++; // this increments the character index
@@ -185,11 +176,7 @@ $(document).ready(function () {
           // second condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           showResults();
         }
-        if (
-          c === sentences[s].length &&
-          currentGameState.playerIsReady === true &&
-          s < sentences.length - 1
-        ) {
+        if (c === sentences[s].length && currentGameState.playerIsReady === true && s < sentences.length - 1) {
           // this if block just checks if the player advances to the next sentence
           // condition checks if 'c' matches the length of the 'current sentence' as denoted by the value of 's'
           setNewSentence();
@@ -213,7 +200,9 @@ $(document).ready(function () {
     currentGameState.currentInput = null; // sets the current input to null
     $("#yellow-block").css("background-color", `red`); // turns block red
 
-    var audio = new Audio("soundEffect.m4a");
+    let n = Math.floor(Math.random() * 3) + 1;
+
+    var audio = new Audio(`soundEffect${n}.m4a`);
     audio.play();
 
     if (currentGameState.playerIsReady === false) {
