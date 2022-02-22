@@ -201,8 +201,8 @@ $(document).ready(function () {
     $("#yellow-block").css("background-color", `red`); // turns block red
 
     let n = Math.floor(Math.random() * 3) + 1;
-
-    var audio = new Audio(`soundEffect${n}.m4a`);
+    //use n as a template literal in var audio to cycle thru sound effects
+    var audio = new Audio(`soundEffect1.m4a`);
     audio.play();
 
     if (currentGameState.playerIsReady === false) {
