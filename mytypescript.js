@@ -228,12 +228,12 @@ $(document).ready(function () {
     if (currentGameState.playerIsReady === false) {
       currentGameState.currentCharacter = beginning[s][c]; // sets the current character to the first character in the 'beginning' array
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
-      console.log(currentGameState);
+      // console.log(currentGameState);
       updatePage();
     } else {
       currentGameState.currentCharacter = sentences[s][c]; // sets the current character to the first character in the 'beginning' array
       currentGameState.currentInput = null; // this prevents startOverLoser from firing immediately upon typing the last character of the previous sentence
-      console.log(currentGameState);
+      // console.log(currentGameState);
       updatePage();
     }
   }
