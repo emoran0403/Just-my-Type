@@ -23,14 +23,14 @@ const sentences = [
   //* makes an array with the sentences for the player to type - these are the actual game sentences
 
   "this one is easy",
-  "His name is Ervin Howell", // ;)
-  "Capitals are a little more difficult",
-  "How About Some Title Case",
+  "This one is a little more complicated",
+  "Are you ready for some lorem ipsum?",
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   `"now", to 'test', your, punctuation!`,
-  "howaboutasentencetypedasifyourspacebarwasbroken",
-  "maybe-you-just-want-to-dash-your-way-through-the-game",
+  "Get read for the oo!",
+  "too, boot, cool, moon, mood, boom, doom, food, goofy, fool, hoop, loop",
   "their, they're, there, to, two, too",
-  "1, 1, 2, 3, 5, 8, and 13 start the Fibonacci Sequence",
+  "That 1 was sentence 8, this is 9, and the next 1 is 10",
   "last one!",
   "jk",
 ];
