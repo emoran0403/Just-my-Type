@@ -22,17 +22,17 @@ const beginning = [
 const sentences = [
   //* makes an array with the sentences for the player to type - these are the actual game sentences
 
-  "this one is easy",
+  "This one is easy",
   "This one is a little more complicated",
   "Are you ready for some lorem ipsum?",
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   `"now", to 'test', your, punctuation!`,
-  "Get read for the oo!",
-  "too, boot, cool, moon, mood, boom, doom, food, goofy, fool, hoop, loop",
-  "their, they're, there, to, two, too",
-  "That 1 was sentence 8, this is 9, and the next 1 is 10",
-  "last one!",
-  "jk",
+  "Get ready for the 'oo'!",
+  "Too, Boot, Cool, Moon, Mood, Boom, Food, Fool, Hoop, Loop",
+  "Their, they're, there, to, two, too",
+  "That 1 was sentence 8, this 1 is 9, and the next 1 is 10",
+  "Last one!",
+  "JK",
 ];
 
 $(document).ready(function () {
