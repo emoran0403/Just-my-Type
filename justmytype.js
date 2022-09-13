@@ -220,7 +220,6 @@ $(document).ready(function () {
       updatePage();
     }, 250);
   }
-
   function setNewSentence() {
     c = 0; // sets character index to zero, so that the player starts at the beginning of the new sentence
     s++; // increments the sentence index by 1, so that the player will start on the next sentence
@@ -237,7 +236,6 @@ $(document).ready(function () {
       updatePage();
     }
   }
-
   function showResults() {
     //console.log("The game is over, results will show on-screen");
     gameIsOver = true;
